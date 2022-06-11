@@ -3,12 +3,10 @@ import styled from 'styled-components/native';
 import { StyledBackground } from '../../constants/styled';
 import { COLORS } from '../../constants';
 import { HomeHeader, Map, Background } from '../';
+import PassInfo from '../organisms/PassInfo';
+import { headerData, passData } from '../../constants/data';
 
-const headerInfo = {
-    name: 'Hubble',
-    location: 'Warsaw, Poland',
-    date: 'March 12th, 12:39'
-};
+
 
 const StyledSafeAreaView = styled.SafeAreaView`
   flex: 1;
@@ -21,11 +19,13 @@ const Home = () => {
             <StyledSafeAreaView>
                 <StatusBar animated={true} backgroundColor={COLORS.primary} barStyle="light-content"/>
                 <HomeHeader
-                    objectName={headerInfo.name}
-                    currentLocation={headerInfo.location}
-                    currentDate={headerInfo.date}
+                    objectName={headerData.name}
+                    currentLocation={headerData.location}
+                    currentDate={headerData.date}
                 />
                 <Map/>
+                <PassInfo passData={passData} nextPass='00:00:00'/>
+            
             </StyledSafeAreaView>
             
             <Background/>

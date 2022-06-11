@@ -1,28 +1,39 @@
 import styled from 'styled-components/native';
 import { FONTS, SIZES, COLORS } from './theme';
 
-export const StyledRow = styled.View`
-  flex-direction: row;
-  align-items: center;
-`;
-
-export const StyledRowSB = styled.View`
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-  padding-vertical: ${SIZES.base}px;
-`;
-
 export const StyledText = styled.Text`
   font-family: ${props => props.isBold ? FONTS.bold : FONTS.light};
   font-size: ${props => props.size ? props.size : SIZES.font}px;
-  color: ${props => props.color ? props.color : COLORS.primary};
+  color: ${props => props.color ? props.color : COLORS.secondary};
 `;
 
 export const StyledIcon = styled.Image`
   width: ${props => props.width || 20}px;
   height: ${props => props.height || 20}px;
-  margin-right: ${SIZES.base}px;
+`;
+
+export const StyledRow = styled.View`
+  flex-direction: row;
+  justify-content: ${props => props.spaceBetween ? 'space-between' : 'center'};
+  align-items: center;
+  padding-vertical: ${SIZES.xSmall}px;
+`;
+
+export const BasicContainer = styled.View`
+  width: 100%;
+  padding-horizontal: ${props => props.padding ? props.padding : SIZES.large}px;
+  flex-direction: column;
+`;
+
+export const RoundedContainer = styled.View`
+  background-color: ${props => props.color ? props.color : COLORS.offWhite};
+  border-radius: ${SIZES.large}px;
+  padding: ${SIZES.large}px;
+  flex-direction: column;
+  shadow-color: ${COLORS.black};
+  shadow-offset: 0;
+  shadow-opacity: 0.5;
+  shadow-radius: 5px;
 `;
 
 export const StyledBackground = styled.View`

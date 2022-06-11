@@ -4,10 +4,13 @@ export const COLORS = {
     complementary: '#FF4C29',
     
     white: '#FFF',
-    gray: '#CCCED1',
+    offWhite: '#CCCED1',
+    gray: '#949EAA',
+    black: '#000',
 };
 
 export const SIZES = {
+    xSmall: 4,
     base: 8,
     small: 12,
     medium: 14,
