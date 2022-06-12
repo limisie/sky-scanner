@@ -10,17 +10,13 @@ const StyledImage = styled.Image`
   height: 100px;
 `;
 
-const SatelliteCard = () => {
+const SatelliteCard = ({data: {name, type, details, image}}) => {
     return (
         <RoundedContainer color={COLORS.primary} marginVertical={SIZES.large}>
-            <StyledImage source={assets.satellite} resizeMode='contain'/>
-            <StyledText color={COLORS.white} size={SIZES.extraLarge} isBold>Hubble</StyledText>
-            <StyledText color={COLORS.white}>lorem ipsum</StyledText>
-            <StyledText color={COLORS.white} size={SIZES.small}>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                Etiam libero elit, porta ut consectetur
-                in, maximus eu nisl. Mauris sed ex et purus efficitur laoreet.
-            </StyledText>
+            <StyledImage source={image} resizeMode="contain"/>
+            <StyledText color={COLORS.white} size={SIZES.extraLarge} isBold>{name}</StyledText>
+            <StyledText color={COLORS.white}>{type}</StyledText>
+            <StyledText color={COLORS.white} size={SIZES.small}>{details}</StyledText>
         </RoundedContainer>
     );
 };

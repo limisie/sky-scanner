@@ -1,9 +1,10 @@
-import { StatusBar } from 'react-native';
+import { FlatList, StatusBar } from 'react-native';
 import { COLORS } from '../../constants';
 import { BasicContainer, StyledBackground, StyledSafeAreaView } from '../../constants/styled';
 import { Background } from '../index';
 import SearchScreenHeader from '../molecules/SearchScreenHeader';
 import SatelliteCard from '../molecules/SatelliteCard';
+import { satelliteList } from '../../constants/data';
 
 const SearchScreen = () => {
     return (
@@ -13,13 +14,12 @@ const SearchScreen = () => {
                 <StatusBar animated={true}
                            backgroundColor={COLORS.white}
                            barStyle="dark-content"/>
-                <SearchScreenHeader/>
                 
                 <BasicContainer>
-                    <SatelliteCard/>
-                    <SatelliteCard/>
-                    <SatelliteCard/>
-                    <SatelliteCard/>
+                    <SearchScreenHeader/>
+                    <FlatList data={satelliteList}
+                              renderItem={({item}) => <SatelliteCard data={item}/>}
+                    />
                 </BasicContainer>
             </StyledSafeAreaView>
             

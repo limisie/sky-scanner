@@ -1,3 +1,5 @@
+import { assets } from './index';
+
 export const passData = [
     {
         id: 0,
@@ -33,3 +35,30 @@ export const headerData = {
     location: 'Warsaw, Poland',
     date: 'March 12th, 12:39'
 };
+
+export const satelliteList = [
+    {
+        name: 'Hubble',
+        type: 'Lorem ipsum',
+        details: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.\n' +
+            'Etiam libero elit, porta ut consectetur\n' +
+            'in, maximus eu nisl. Mauris sed ex et purus efficitur laoreet.',
+        image: assets.satellite
+    },
+    {
+        name: 'Hubble',
+        type: 'Lorem ipsum',
+        details: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.\n' +
+            'Etiam libero elit, porta ut consectetur\n' +
+            'in, maximus eu nisl. Mauris sed ex et purus efficitur laoreet.',
+        image: assets.satellite
+    },
+    {
+        name: 'Hubble',
+        type: 'Lorem ipsum',
+        details: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.\n' +
+            'Etiam libero elit, porta ut consectetur\n' +
+            'in, maximus eu nisl. Mauris sed ex et purus efficitur laoreet.',
+        image: assets.satellite
+    },
+]
