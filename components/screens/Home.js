@@ -5,6 +5,7 @@ import { HomeHeader, Map, Background, PassInfo } from "../";
 import { headerData, passData, satelliteList } from "../../constants/data";
 import { useEffect, useState } from "react";
 import SkyService from "../../services/SkyService";
+import WeatherService from "../../services/WeatherService";
 
 const Home = (props) => {
   const [skyObject, setSkyObject] = useState(satelliteList[0]);
@@ -58,10 +59,23 @@ const Home = (props) => {
       getAllInfoAboutSatellite(skyObject.noradId);
     }
 
+    getCurrentWeather(
+      mapToOptionObject().observerLat,
+      mapToOptionObject().observerLng
+    );
+
     return () => {
       Geolocation.clearWatch(watchID);
     };
   }, []);
+
+  const getCurrentWeather = async (observerLat, observerLng) => {
+    console.log("Getting weather...");
+    const location = [observerLat, observerLng];
+    const weather = await WeatherService.getWeather(location);
+    console.log(weather);
+    return weather;
+  };
 
   const getOneTimeLocation = () => {
     Geolocation.getCurrentPosition(
