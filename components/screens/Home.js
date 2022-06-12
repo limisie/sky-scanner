@@ -102,14 +102,14 @@ const Home = (props) => {
   };
 
   const getAllInfoAboutSatellite = async (noradId) => {
-    console.log("pobieranie rozpoczęte");
-    const tle = await SkyService.getTle(noradId);
+    const tle = await SkyService.getTle(noradId).data;
 
     const options = mapToOptionObject();
 
-    const radio = await SkyService.getRadioPasses(noradId, options);
-    const position = await SkyService.getSatellitePositions(noradId, options);
-    const visual = await SkyService.getVisualPasses(noradId, options);
+    const radio = await SkyService.getRadioPasses(noradId, options).data;
+    const position = await SkyService.getSatellitePositions(noradId, options)
+      .data;
+    const visual = await SkyService.getVisualPasses(noradId, options).data;
 
     console.log({ tle, radio, position, visual });
     console.log("Options" + options);
