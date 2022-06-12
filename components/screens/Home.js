@@ -72,7 +72,7 @@ const Home = (props) => {
   const getCurrentWeather = async (observerLat, observerLng) => {
     console.log("Getting weather...");
     const location = [observerLat, observerLng];
-    const weather = await WeatherService.getWeather(location);
+    // const weather = await WeatherService.getWeather(location);
     console.log(weather);
     return weather;
   };
