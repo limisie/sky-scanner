@@ -2,6 +2,38 @@ import { BasicContainer, RoundedContainer, StyledIcon, StyledRow, StyledText } f
 import { assets, COLORS, SIZES } from '../../constants';
 import { FlatList, View } from 'react-native';
 import { weatherIcon } from '../../constants/helpers';
+import styled from 'styled-components/native';
+
+
+const PassContainer = styled(RoundedContainer)`
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+  margin-top: ${-SIZES.extraLarge}px;
+  padding-bottom: 0;
+}
+`;
+
+const PassInfo = ({passData, nextPass}) => {
+    return (
+        <PassContainer>
+            <StyledRow spaceBetween>
+                <StyledText isBold>Next pass</StyledText>
+                <StyledText>{nextPass}</StyledText>
+            </StyledRow>
+            
+            <PassHeader/>
+            <FlatList
+                data={passData}
+                renderItem={({item}) => <PassItem data={item}/>}
+                keyExtractor={item => item.id}
+                showsVerticalScrollIndicator={false}
+                horizontal={false}
+                numColumns={1}
+                scrollEnabled={true}
+            />
+        </PassContainer>
+    );
+};
 
 
 const HeaderItem = ({flexBasis, children}) =>
@@ -11,17 +43,15 @@ const HeaderItem = ({flexBasis, children}) =>
         </StyledText>
     </View>;
 
-const PassHeader = () => {
-    return (
-        <StyledRow spaceBetween>
-            <HeaderItem flexBasis="30%">date</HeaderItem>
-            <HeaderItem flexBasis="20%">from</HeaderItem>
-            <HeaderItem flexBasis="20%">to</HeaderItem>
-            <HeaderItem flexBasis="15%">weather</HeaderItem>
-            <HeaderItem>alarm</HeaderItem>
-        </StyledRow>
-    );
-};
+
+const PassHeader = () =>
+    <StyledRow spaceBetween>
+        <HeaderItem flexBasis="30%">date</HeaderItem>
+        <HeaderItem flexBasis="20%">from</HeaderItem>
+        <HeaderItem flexBasis="20%">to</HeaderItem>
+        <HeaderItem flexBasis="15%">weather</HeaderItem>
+        <HeaderItem>alarm</HeaderItem>
+    </StyledRow>;
 
 
 const PassItem = ({data}) => {
@@ -36,28 +66,5 @@ const PassItem = ({data}) => {
     );
 };
 
-
-const PassInfo = ({passData, nextPass}) => {
-    return (
-        <BasicContainer>
-            <RoundedContainer marginTop={-SIZES.extraLarge}>
-                <StyledRow spaceBetween>
-                    <StyledText isBold>Next pass</StyledText>
-                    <StyledText>{nextPass}</StyledText>
-                </StyledRow>
-                
-                <FlatList
-                    data={passData}
-                    renderItem={({item}) => <PassItem data={item}/>}
-                    keyExtractor={item => item.id}
-                    showsVerticalScrollIndicator={false}
-                    ListHeaderComponent={<PassHeader/>}
-                    horizontal={false}
-                    numColumns={1}
-                />
-            </RoundedContainer>
-        </BasicContainer>
-    );
-};
 
 export default PassInfo;

@@ -28,7 +28,36 @@ export const passData = [
         from: '22:43',
         to: '22:53',
         weather: 'sun'
-    }]
+    },
+    {
+        id: 4,
+        date: 'March 17',
+        from: '22:43',
+        to: '22:53',
+        weather: 'sun'
+    },
+    {
+        id: 5,
+        date: 'March 17',
+        from: '22:43',
+        to: '22:53',
+        weather: 'sun'
+    },
+    {
+        id: 6,
+        date: 'March 17',
+        from: '22:43',
+        to: '22:53',
+        weather: 'sun'
+    },
+    {
+        id: 7,
+        date: 'March 17',
+        from: '22:43',
+        to: '22:53',
+        weather: 'sun'
+    },
+];
 
 export const headerData = {
     name: 'Hubble',
@@ -61,4 +90,20 @@ export const satelliteList = [
             'in, maximus eu nisl. Mauris sed ex et purus efficitur laoreet.',
         image: assets.satellite
     },
-]
+    {
+        name: 'Hubble',
+        type: 'Lorem ipsum',
+        details: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.\n' +
+            'Etiam libero elit, porta ut consectetur\n' +
+            'in, maximus eu nisl. Mauris sed ex et purus efficitur laoreet.',
+        image: assets.satellite
+    },
+    {
+        name: 'Hubble',
+        type: 'Lorem ipsum',
+        details: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.\n' +
+            'Etiam libero elit, porta ut consectetur\n' +
+            'in, maximus eu nisl. Mauris sed ex et purus efficitur laoreet.',
+        image: assets.satellite
+    },
+];

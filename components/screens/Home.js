@@ -5,20 +5,19 @@ import { HomeHeader, Map, Background, PassInfo } from '../';
 import { headerData, passData } from '../../constants/data';
 
 
-
 const Home = () => {
     return (
         <StyledBackground>
+            <StatusBar animated={true} backgroundColor={COLORS.primary} barStyle="light-content"/>
+            
             <StyledSafeAreaView>
-                <StatusBar animated={true} backgroundColor={COLORS.primary} barStyle="light-content"/>
                 <HomeHeader
                     objectName={headerData.name}
                     currentLocation={headerData.location}
                     currentDate={headerData.date}
                 />
                 <Map/>
-                <PassInfo passData={passData} nextPass='00:00:00'/>
-            
+                <PassInfo passData={passData} nextPass="00:00:00"/>
             </StyledSafeAreaView>
             
             <Background/>
