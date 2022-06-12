@@ -29,6 +29,34 @@ export const passData = [
     to: "22:53",
     weather: "sun",
   },
+  {
+    id: 4,
+    date: "March 17",
+    from: "22:43",
+    to: "22:53",
+    weather: "sun",
+  },
+  {
+    id: 5,
+    date: "March 17",
+    from: "22:43",
+    to: "22:53",
+    weather: "sun",
+  },
+  {
+    id: 6,
+    date: "March 17",
+    from: "22:43",
+    to: "22:53",
+    weather: "sun",
+  },
+  {
+    id: 7,
+    date: "March 17",
+    from: "22:43",
+    to: "22:53",
+    weather: "sun",
+  },
 ];
 
 export const headerData = {

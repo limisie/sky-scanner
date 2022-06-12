@@ -1,4 +1,5 @@
 import styled from 'styled-components/native';
+import { View } from 'react-native';
 import { FONTS, SIZES, COLORS } from './theme';
 
 export const StyledText = styled.Text`
@@ -23,9 +24,10 @@ export const BasicContainer = styled.View`
   width: 100%;
   padding-horizontal: ${props => props.padding ? props.padding : SIZES.large}px;
   flex-direction: column;
+  flex: 1;
 `;
 
-export const RoundedContainer = styled.View`
+export const RoundedContainer = styled(View)`
   background-color: ${props => props.color ? props.color : COLORS.offWhite};
   border-radius: ${SIZES.large}px;
   padding: ${SIZES.large}px;
@@ -34,6 +36,8 @@ export const RoundedContainer = styled.View`
   shadow-offset: 0;
   shadow-opacity: 0.5;
   shadow-radius: 5px;
+  flex: 1;
+  margin-horizontal: ${props => props.padding ? props.padding : SIZES.large}px;
 `;
 
 export const StyledBackground = styled.View`

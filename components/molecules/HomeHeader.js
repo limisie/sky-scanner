@@ -8,7 +8,7 @@ const HomeHeader = ({objectName, currentLocation, currentDate}) => {
     const navigation = useNavigation();
     
     return (
-        <BasicContainer marginVertical={SIZES.base}>
+        <BasicContainer marginVertical={SIZES.base} maxHeight={70}>
             
             <StyledRow spaceBetween>
                 <StyledText isBold size={SIZES.extraLarge} color={COLORS.white}>{objectName}</StyledText>
