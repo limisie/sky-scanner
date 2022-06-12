@@ -1,4 +1,3 @@
-const fetch = require("node-fetch");
 const queryString = require("query-string");
 const moment = require("moment");
 const axios = require("axios");
@@ -23,7 +22,11 @@ const timesteps = ["current", "1h", "1d"];
 
 const timezone = "Poland";
 
-const getWeather = async (location) => {
+const getWeather = async (location, startTime, endTime) => {
+  startTime =
+    startTime || moment.utc(moment.utc()).add(0, "minutes").toISOString();
+  endTime = endTime || moment.utc(moment.utc()).add(1, "days").toISOString();
+
   const getTimelineParameters = queryString.stringify(
     {
       apikey,
@@ -37,10 +40,6 @@ const getWeather = async (location) => {
     },
     { arrayFormat: "comma" }
   );
-
-  const now = moment.utc();
-  const startTime = moment.utc(now).add(0, "minutes").toISOString();
-  const endTime = moment.utc(now).add(1, "days").toISOString();
 
   const response = await axios.get(
     getTimelineURL + "?" + getTimelineParameters
