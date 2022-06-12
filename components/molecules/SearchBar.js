@@ -1,8 +1,7 @@
-import { TextInput } from 'react-native';
-import styled from 'styled-components/native';
-import { assets, COLORS, SIZES } from '../../constants';
-import { StyledIcon } from '../../constants/styled';
-
+import { TextInput } from "react-native";
+import styled from "styled-components/native";
+import { assets, COLORS, SIZES } from "../../constants";
+import { StyledIcon } from "../../constants/styled";
 
 const StyledBar = styled.View`
   width: 100%;
@@ -19,20 +18,17 @@ const StyledBar = styled.View`
   margin-vertical: ${SIZES.extraLarge}px;
 `;
 
-const SearchBar = () => {
-    return (
-        <StyledBar>
-            <TextInput
-                placeholder="Search"
-                onChangeText={() => {
-                }}
-            />
-            <StyledIcon
-                source={assets.searchDark}
-                resizeMode="contain"
-            />
-        </StyledBar>
-    );
+const SearchBar = ({ onChangeText, value }) => {
+  return (
+    <StyledBar>
+      <TextInput
+        placeholder="Search"
+        onChangeText={(text) => onChangeText(text)}
+        value={value}
+      />
+      <StyledIcon source={assets.searchDark} resizeMode="contain" />
+    </StyledBar>
+  );
 };
 
 export default SearchBar;

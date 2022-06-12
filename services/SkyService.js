@@ -1,44 +1,62 @@
 import axios from "axios";
 
-export default class SkyService {
-  constructor() {
-    this.API_KEY = process.env.N2YO_API_KEY;
-    this.BASIC_URL = process.env.N2YO_BASIC_URL;
-  }
+const API_KEY = "EACCEC-FU99HY-M2HCGF-4UQH";
+const BASIC_URL = "https://api.n2yo.com/rest/v1/satellite";
 
-  async getSatellitePositions(id, options) {
-    return await axios.get(
-      `${this.BASIC_URL}/positions/${id}/${options.observerLat}/${
-        options.observerLng
-      }/${options.observerAlt}/${options.seconds}${this.getKeyQuery()}`
-    );
-  }
+axios;
 
-  async getVisualPasses(id, options) {
-    return await axios.get(
-      `${this.BASIC_URL}/visualpasses/${id}/${options.observerLat}/${
-        options.observerLng
-      }/${options.observerAlt}/${options.days}/${
-        options.minVisibility
-      }${this.getKeyQuery()}`
-    );
-  }
+const getSatellitePositions = async (id, options) => {
+  return await axios.get(
+    `${BASIC_URL}/positions/${id}/${options.observerLat}/${
+      options.observerLng
+    }/${options.observerAlt}/${options.seconds}${getKeyQuery()}`,
+    {
+      headers: { "Access-Control-Allow-Origin": "*" },
+    }
+  );
+};
 
-  async getRadioPasses(id, options) {
-    return await axios.get(
-      `${this.BASIC_URL}/radiopasses/${id}/${options.observerLat}/${
-        options.observerLng
-      }/${options.observerAlt}/${options.days}/${
-        options.minElevetion
-      }${this.getKeyQuery()}`
-    );
-  }
+const getVisualPasses = async (id, options) => {
+  return await axios.get(
+    `${BASIC_URL}/visualpasses/${id}/${options.observerLat}/${
+      options.observerLng
+    }/${options.observerAlt}/${options.days}/${
+      options.minVisibility
+    }${getKeyQuery()}`,
+    {
+      headers: { "Access-Control-Allow-Origin": "*" },
+    }
+  );
+};
 
-  async getTle(id) {
-    return await axios.get(`${this.BASIC_URL}/tle/${id}/${this.getKeyQuery()}`);
-  }
+const getRadioPasses = async (id, options) => {
+  return await axios.get(
+    `${BASIC_URL}/radiopasses/${id}/${options.observerLat}/${
+      options.observerLng
+    }/${options.observerAlt}/${options.days}/${
+      options.minElevetion
+    }${getKeyQuery()}`,
+    {
+      headers: { "Access-Control-Allow-Origin": "*" },
+    }
+  );
+};
 
-  getKeyQuery() {
-    return `&apiKey=${this.API_KEY}`;
-  }
-}
+const getTle = async (id) => {
+  return await axios.get(`${BASIC_URL}/tle/${id}${getKeyQuery()}`, {
+    headers: {
+      "Access-Control-Allow-Origin": "*",
+    },
+  });
+};
+
+const getKeyQuery = () => {
+  return `&apiKey=${API_KEY}`;
+};
+
+export default {
+  getSatellitePositions,
+  getVisualPasses,
+  getRadioPasses,
+  getTle,
+};
