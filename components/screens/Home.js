@@ -1,17 +1,10 @@
 import { StatusBar } from 'react-native';
-import styled from 'styled-components/native';
-import { StyledBackground } from '../../constants/styled';
+import { StyledBackground, StyledSafeAreaView } from '../../constants/styled';
 import { COLORS } from '../../constants';
-import { HomeHeader, Map, Background } from '../';
-import PassInfo from '../organisms/PassInfo';
+import { HomeHeader, Map, Background, PassInfo } from '../';
 import { headerData, passData } from '../../constants/data';
 
 
-
-const StyledSafeAreaView = styled.SafeAreaView`
-  flex: 1;
-  z-index: 0;
-`;
 
 const Home = () => {
     return (

@@ -17,6 +17,7 @@ export const SIZES = {
     font: 16,
     large: 18,
     extraLarge: 24,
+    xxLarge: 28,
 };
 
 export const FONTS = {

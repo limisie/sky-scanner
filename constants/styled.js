@@ -44,3 +44,8 @@ export const StyledBackground = styled.View`
   right: 0;
   left: 0;
 `;
+
+export const StyledSafeAreaView = styled.SafeAreaView`
+  flex: 1;
+  z-index: 0;
+`;

@@ -12,11 +12,11 @@ const BottomColor = styled.View`
   background-color: ${props => props.isLight ? COLORS.white : COLORS.primary};
 `;
 
-const Background = () => {
+const Background = ({isLight}) => {
     return (
         <StyledBackground>
-            <TopColor/>
-            <BottomColor/>
+            <TopColor isLight={isLight}/>
+            <BottomColor isLight={isLight}/>
         </StyledBackground>
     );
 };
