@@ -13,6 +13,7 @@ const theme = {
         background: 'transparent'
     }
 };
+
 const App = () => {
     const [loaded] = useFonts({
         MontserratLight: require('./assets/fonts/Montserrat-Light.ttf'),
