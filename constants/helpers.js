@@ -1,15 +1,14 @@
 import { assets } from './index';
 
-export const weatherIcon = (weather) => {
-  switch (weather) {
-    case 'sun':
-      return assets.sun;
-    case 'cloud':
-      return assets.cloud;
-    case 'rain':
-      return assets.rain;
-    default:
-      return assets.nan;
+export const weatherIcon = (weatherCode) => {
+  if (weatherCode < 1200) {
+    return assets.sun;
+  } else if (weatherCode < 2200) {
+    return assets.cloud;
+  } else if (weatherCode < 5000) {
+    return assets.rain;
+  } else {
+    return assets.nan;
   }
 };
 

@@ -27,27 +27,24 @@ const Home = (props) => {
   };
   
   useEffect(() => {
+    getLocationData();
+    
+    setTime(getCurrentTime());
+    // setInterval(() => {
+    //   setTime(getCurrentTime());
+    // }, 60000);
+    
     if (props.route?.params) {
       setSkyObject(props.route?.params);
     }
-    
     if (skyObject.noradId) {
       getAllInfoAboutSatellite(skyObject.noradId);
     }
     
-    getLocationData();
-    
-    getCurrentWeather(
-      mapToOptionObject().observerLat,
-      mapToOptionObject().observerLng
-    );
-    
-    setInterval(() => {
-      setTime(getCurrentTime());
-    }, 1000);
-    
-    let time = getCurrentTime();
-    console.log(time);
+    // getCurrentWeather(
+    //   mapToOptionObject().observerLat,
+    //   mapToOptionObject().observerLng
+    // );
   }, []);
   
   const getLocationData = async () => {
@@ -71,6 +68,7 @@ const Home = (props) => {
   const getCurrentWeather = async (observerLat, observerLng) => {
     const location = [observerLat, observerLng];
     const weather = await WeatherService.getWeather(location);
+    // console.log(weather);
     return weather;
   };
   
@@ -80,8 +78,7 @@ const Home = (props) => {
     const options = mapToOptionObject();
     
     const radio = await SkyService.getRadioPasses(noradId, options).data;
-    const position = await SkyService.getSatellitePositions(noradId, options)
-      .data;
+    const position = await SkyService.getSatellitePositions(noradId, options).data;
     const visual = await SkyService.getVisualPasses(noradId, options).data;
     
     return { tle, radio, position, visual };
@@ -100,7 +97,7 @@ const Home = (props) => {
           currentLocation={locationName}
           currentDate={time}
         />
-        <Map/>
+        <Map lat={currentLatitude} lon={currentLongitude}/>
         <PassInfo passData={passData} nextPass="00:00:00"/>
       </StyledSafeAreaView>
       
