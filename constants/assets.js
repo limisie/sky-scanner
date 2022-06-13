@@ -10,16 +10,22 @@ import nan from '../assets/icons/nan.png';
 import map from '../assets/images/map-mock.png';
 import satellite from '../assets/images/satellite.png';
 
+const monthNames = ['January', 'February', 'March', 'April', 'May', 'June',
+  'July', 'August', 'September', 'October', 'November', 'December'
+];
+
 export default {
-    pin,
-    search,
-    searchDark,
-    clockDisabled,
-    sun,
-    cloud,
-    rain,
-    nan,
-    
-    map,
-    satellite
+  pin,
+  search,
+  searchDark,
+  clockDisabled,
+  sun,
+  cloud,
+  rain,
+  nan,
+  
+  map,
+  satellite,
+  
+  monthNames
 };

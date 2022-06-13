@@ -1,18 +1,21 @@
-import { StatusBar, PermissionsAndroid, Platform } from "react-native";
-import { StyledBackground, StyledSafeAreaView } from "../../constants/styled";
-import { COLORS } from "../../constants";
-import { HomeHeader, Map, Background, PassInfo } from "../";
-import { headerData, passData, satelliteList } from "../../constants/data";
-import { useEffect, useState } from "react";
-import SkyService from "../../services/SkyService";
-import WeatherService from "../../services/WeatherService";
+import { StatusBar } from 'react-native';
+import { StyledBackground, StyledSafeAreaView } from '../../constants/styled';
+import { assets, COLORS } from '../../constants';
+import { HomeHeader, Map, Background, PassInfo } from '../';
+import { passData, satelliteList } from '../../constants/data';
+import { useEffect, useState } from 'react';
+import SkyService from '../../services/SkyService';
+import WeatherService from '../../services/WeatherService';
+import LocationService from '../../services/LocationService';
+import { dayTh } from '../../constants/helpers';
 
 const Home = (props) => {
   const [skyObject, setSkyObject] = useState(satelliteList[0]);
-  const [currentLongitude, setCurrentLongitude] = useState("");
-  const [currentLatitude, setCurrentLatitude] = useState("");
-  const [locationStatus, setLocationStatus] = useState("");
-
+  const [currentLongitude, setCurrentLongitude] = useState(0);
+  const [currentLatitude, setCurrentLatitude] = useState(0);
+  const [locationName, setLocationName] = useState('');
+  const [time, setTime] = useState('');
+  
   const mapToOptionObject = () => {
     return {
       observerLat: currentLatitude || 51.123523493468745, // Dirty for Breslau
@@ -22,114 +25,68 @@ const Home = (props) => {
       observerAlt: 0,
     };
   };
-
+  
   useEffect(() => {
     if (props.route?.params) {
       setSkyObject(props.route?.params);
     }
-
-    const requestLocationPermission = async () => {
-      if (Platform.OS === "ios") {
-        getOneTimeLocation();
-        subscribeLocationLocation();
-      } else {
-        try {
-          const granted = await PermissionsAndroid.request(
-            PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-            {
-              title: "Location Access Required",
-              message: "This App needs to Access your location",
-            }
-          );
-          if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-            //To Check, If Permission is granted
-            getOneTimeLocation();
-            subscribeLocationLocation();
-          } else {
-            setLocationStatus("Permission Denied");
-          }
-        } catch (err) {
-          console.warn(err);
-        }
-      }
-    };
-    requestLocationPermission();
-
+    
     if (skyObject.noradId) {
       getAllInfoAboutSatellite(skyObject.noradId);
     }
-
+    
+    getLocationData();
+    
     getCurrentWeather(
       mapToOptionObject().observerLat,
       mapToOptionObject().observerLng
     );
-
-    return () => {
-      Geolocation.clearWatch(watchID);
-    };
+    
+    setInterval(() => {
+      setTime(getCurrentTime());
+    }, 1000);
+    
+    let time = getCurrentTime();
+    console.log(time);
   }, []);
-
+  
+  const getLocationData = async () => {
+    const { latitude, longitude } = await LocationService.getCurrentLocation();
+    setCurrentLatitude(latitude);
+    setCurrentLongitude(longitude);
+    const name = await LocationService.getLocationName(latitude, longitude);
+    setLocationName(name);
+  };
+  
+  const getCurrentTime = () => {
+    const today = new Date();
+    const month = assets.monthNames[today.getMonth()];
+    const day = today.getDate();
+    const hour = (today.getHours() < 10 ? '0' : '') + today.getHours();
+    const minute = (today.getMinutes() < 10 ? '0' : '') + today.getMinutes();
+    
+    return `${month} ${day}${dayTh(day)}, ${hour}:${minute}`;
+  };
+  
   const getCurrentWeather = async (observerLat, observerLng) => {
-    console.log("Getting weather...");
     const location = [observerLat, observerLng];
-    // const weather = await WeatherService.getWeather(location);
-    console.log(weather);
+    const weather = await WeatherService.getWeather(location);
     return weather;
   };
-
-  const getOneTimeLocation = () => {
-    Geolocation.getCurrentPosition(
-      (position) => {
-        const currentLongitude = JSON.stringify(position.coords.longitude);
-        const currentLatitude = JSON.stringify(position.coords.latitude);
-        setCurrentLongitude(currentLongitude);
-        setCurrentLatitude(currentLatitude);
-      },
-      (error) => {
-        setLocationStatus(error.message);
-      },
-      {
-        enableHighAccuracy: false,
-        timeout: 30000,
-        maximumAge: 1000,
-      }
-    );
-  };
-
-  const subscribeLocationLocation = () => {
-    watchID = Geolocation.watchPosition(
-      (position) => {
-        const currentLongitude = JSON.stringify(position.coords.longitude);
-        const currentLatitude = JSON.stringify(position.coords.latitude);
-
-        setCurrentLongitude(currentLongitude);
-        setCurrentLatitude(currentLatitude);
-      },
-      (error) => {
-        setLocationStatus(error.message);
-      },
-      {
-        enableHighAccuracy: false,
-        maximumAge: 1000,
-      }
-    );
-  };
-
+  
   const getAllInfoAboutSatellite = async (noradId) => {
     const tle = await SkyService.getTle(noradId).data;
-
+    
     const options = mapToOptionObject();
-
+    
     const radio = await SkyService.getRadioPasses(noradId, options).data;
     const position = await SkyService.getSatellitePositions(noradId, options)
       .data;
     const visual = await SkyService.getVisualPasses(noradId, options).data;
-
-    console.log({ tle, radio, position, visual });
-    console.log("Options" + options);
+    
     return { tle, radio, position, visual };
   };
-
+  
   return (
     <StyledBackground>
       <StyledSafeAreaView>
@@ -139,15 +96,15 @@ const Home = (props) => {
           barStyle="light-content"
         />
         <HomeHeader
-          objectName={headerData.name}
-          currentLocation={headerData.location}
-          currentDate={headerData.date}
+          objectName={skyObject.name}
+          currentLocation={locationName}
+          currentDate={time}
         />
-        <Map />
-        <PassInfo passData={passData} nextPass="00:00:00" />
+        <Map/>
+        <PassInfo passData={passData} nextPass="00:00:00"/>
       </StyledSafeAreaView>
-
-      <Background />
+      
+      <Background/>
     </StyledBackground>
   );
 };
