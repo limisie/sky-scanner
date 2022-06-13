@@ -1,15 +1,16 @@
 import MapView, { PROVIDER_GOOGLE, Polyline, Marker } from 'react-native-maps';
 import { COLORS, SIZES } from '../../constants';
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { useFocusEffect } from '@react-navigation/core';
 
 
-const Map = ({ lat, lon, satelliteLocations }) => {
+const Map = ({ lat, lon, satellitePositions }) => {
   const ref = useRef(null);
   const [satellitePath, setSatellitePath] = useState(null);
   
-  useEffect(() => {
-    setSatellitePath(satelliteLocations);
-  }, [satelliteLocations]);
+  useFocusEffect(useCallback(() => {
+    setSatellitePath(satellitePositions);
+  }));
   
   useEffect(() => {
     ref.current.animateCamera(
@@ -48,15 +49,15 @@ const Map = ({ lat, lon, satelliteLocations }) => {
       }}
     >
       {satellitePath ?
-        <Polyline
-          coordinates={satellitePath}
-          strokeColor={COLORS.complementary}
-          strokeWidth={2}
-        /> : null}
-      {satellitePath ?
-        <Marker
-          coordinate={satellitePath[0]}
-        /> : null}
+        <>
+          <Polyline
+            coordinates={satellitePath}
+            strokeColor={COLORS.complementary}
+            strokeWidth={2}
+          />
+          <Marker coordinate={satellitePath[0]}/>
+        </>
+        : null}
     </MapView>
   );
 };
