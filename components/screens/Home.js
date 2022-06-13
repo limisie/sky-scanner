@@ -1,25 +1,30 @@
-import { StatusBar } from 'react-native';
-import { StyledBackground, StyledSafeAreaView } from '../../constants/styled';
-import { assets, COLORS } from '../../constants';
-import { HomeHeader, Map, Background, PassInfo } from '../';
-import { passData, satelliteList } from '../../constants/data';
-import { useCallback, useEffect, useState } from 'react';
-import SkyService from '../../services/SkyService';
-import WeatherService from '../../services/WeatherService';
-import LocationService from '../../services/LocationService';
-import { dayTh } from '../../constants/helpers';
-import { useFocusEffect } from '@react-navigation/core';
-import * as satellite from 'satellite.js';
-
+import { StatusBar } from "react-native";
+import { StyledBackground, StyledSafeAreaView } from "../../constants/styled";
+import { assets, COLORS } from "../../constants";
+import { HomeHeader, Map, Background, PassInfo } from "../";
+import { passData, satelliteList } from "../../constants/data";
+import { useCallback, useEffect, useState } from "react";
+import SkyService from "../../services/SkyService";
+import WeatherService from "../../services/WeatherService";
+import LocationService from "../../services/LocationService";
+import { dayTh } from "../../constants/helpers";
+import { useFocusEffect } from "@react-navigation/core";
+import * as satellite from "satellite.js";
 
 const Home = (props) => {
   const [skyObject, setSkyObject] = useState(satelliteList[0]);
   const [skyObjectLocation, setSkyObjectLocation] = useState(null);
-  const [currentLatitude, setCurrentLatitude] = useState(assets.wroclawLocation.latitude);
-  const [currentLongitude, setCurrentLongitude] = useState(assets.wroclawLocation.longitude);
-  const [locationName, setLocationName] = useState('');
-  const [date, setDate] = useState('');
-  
+  const [currentLatitude, setCurrentLatitude] = useState(
+    assets.wroclawLocation.latitude
+  );
+  const [currentLongitude, setCurrentLongitude] = useState(
+    assets.wroclawLocation.longitude
+  );
+  const [locationName, setLocationName] = useState("");
+  const [date, setDate] = useState("");
+
+  const [apiSatteliteInfo, setApiSattleiteInfo] = useState(null);
+
   const mapToOptionObject = () => {
     return {
       observerLat: currentLatitude,
@@ -29,30 +34,34 @@ const Home = (props) => {
       observerAlt: 0,
     };
   };
-  
+
   useEffect(() => {
     setLocationData();
-    
+
     setDate(getCurrentDate());
   }, []);
-  
-  useFocusEffect(useCallback(() => {
-    if (props.route?.params) {
-      setSkyObject(props.route?.params);
-    }
-    
-    if (skyObject.noradId) {
-      getSkyObjectPosition(new Date())
-        .then(res => setSkyObjectLocation(res));
-    }
-    
-    getCurrentWeather(
-      mapToOptionObject().observerLat,
-      mapToOptionObject().observerLng
-    );
-  }, [props.route]));
-  
-  
+
+  useFocusEffect(
+    useCallback(() => {
+      if (props.route?.params) {
+        setSkyObject(props.route?.params);
+      }
+
+      if (skyObject.noradId) {
+        setApiSattleiteInfo(getAllInfoAboutSatellite(skyObject.noradId));
+
+        getSkyObjectPosition(new Date()).then((res) =>
+          setSkyObjectLocation(res)
+        );
+      }
+
+      getCurrentWeather(
+        mapToOptionObject().observerLat,
+        mapToOptionObject().observerLng
+      );
+    }, [props.route])
+  );
+
   const setLocationData = async () => {
     const { latitude, longitude } = await LocationService.getCurrentLocation();
     setCurrentLatitude(latitude);
@@ -60,49 +69,55 @@ const Home = (props) => {
     const name = await LocationService.getLocationName(latitude, longitude);
     setLocationName(name);
   };
-  
+
   const getCurrentDate = () => {
     const today = new Date();
     const month = assets.monthNames[today.getMonth()];
     const day = today.getDate();
-    
+
     return `${month} ${day}${dayTh(day)}`;
   };
-  
-  
+
   const getCurrentWeather = async (observerLat, observerLng) => {
     const location = [observerLat, observerLng];
     // const weather = await WeatherService.getWeather(location);
     return weather;
   };
-  
+
   const getAllInfoAboutSatellite = async (noradId) => {
-    const { data: { tle } } = await SkyService.getTle(noradId);
+    const {
+      data: { tle },
+    } = await SkyService.getTle(noradId);
     const options = mapToOptionObject();
-    
+
     const radio = await SkyService.getRadioPasses(noradId, options);
     const position = await SkyService.getSatellitePositions(noradId, options);
     const visual = await SkyService.getVisualPasses(noradId, options);
-    
+
     return { tle, radio, position, visual };
   };
-  
+
   const getSkyObjectPosition = async (date) => {
-    const { data: { tle } } = await SkyService.getTle(skyObject.noradId);
-    
+    const {
+      data: { tle },
+    } = await SkyService.getTle(skyObject.noradId);
+
     const satrec = satellite.twoline2satrec(
-      tle.split('\n')[0].trim(),
-      tle.split('\n')[1].trim()
+      tle.split("\n")[0].trim(),
+      tle.split("\n")[1].trim()
     );
     const positionAndVelocity = satellite.propagate(satrec, date);
     const gmst = satellite.gstime(date);
-    const position = satellite.eciToGeodetic(positionAndVelocity.position, gmst);
-    
+    const position = satellite.eciToGeodetic(
+      positionAndVelocity.position,
+      gmst
+    );
+
     const longitude = satellite.degreesLong(position.longitude);
     const latitude = satellite.degreesLat(position.latitude);
     return { longitude, latitude };
   };
-  
+
   return (
     <StyledBackground>
       <StyledSafeAreaView>
@@ -116,13 +131,15 @@ const Home = (props) => {
           currentLocation={locationName}
           currentDate={date}
         />
-        <Map lat={currentLatitude}
-             lon={currentLongitude}
-             skyObject={skyObjectLocation}/>
-        <PassInfo passData={passData} nextPass="00:00:00"/>
+        <Map
+          lat={currentLatitude}
+          lon={currentLongitude}
+          skyObject={skyObjectLocation}
+        />
+        <PassInfo passData={passData} />
       </StyledSafeAreaView>
-      
-      <Background/>
+
+      <Background />
     </StyledBackground>
   );
 };

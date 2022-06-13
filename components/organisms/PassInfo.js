@@ -1,22 +1,31 @@
-import { RoundedContainer, StyledIcon, StyledRow, StyledText } from '../../constants/styled';
-import { assets, COLORS, SIZES } from '../../constants';
-import { FlatList, View } from 'react-native';
-import { weatherIcon } from '../../constants/helpers';
+import {
+  RoundedContainer,
+  StyledIcon,
+  StyledRow,
+  StyledText,
+} from "../../constants/styled";
+import { assets, COLORS, SIZES } from "../../constants";
+import { FlatList, View } from "react-native";
+import { weatherIcon } from "../../constants/helpers";
+import dateFormat, { masks } from "dateformat";
 
+const PassInfo = ({ passData }) => {
+  const dateFormatBasicString = "H:MM TT";
 
-const PassInfo = ({ passData, nextPass }) => {
   return (
     <RoundedContainer marginTop={-SIZES.extraLarge}>
       <StyledRow spaceBetween>
         <StyledText isBold>Next pass</StyledText>
-        <StyledText>{nextPass}</StyledText>
+        <StyledText>
+          {dateFormat(new Date(passData[0].startUTC), dateFormatBasicString)}
+        </StyledText>
       </StyledRow>
-      
-      <PassHeader/>
+
+      <PassHeader />
       <FlatList
         data={passData}
-        renderItem={({ item }) => <PassItem data={item}/>}
-        keyExtractor={item => item.id}
+        renderItem={({ item }) => <PassItem data={item} />}
+        keyExtractor={(item) => item.id}
         showsVerticalScrollIndicator={false}
         horizontal={false}
         numColumns={1}
@@ -26,38 +35,43 @@ const PassInfo = ({ passData, nextPass }) => {
   );
 };
 
-
-const HeaderItem = ({ flexBasis, children }) =>
+const HeaderItem = ({ flexBasis, children }) => (
   <View flexBasis={flexBasis}>
     <StyledText isBold size={SIZES.base} color={COLORS.gray}>
       {children}
     </StyledText>
-  </View>;
+  </View>
+);
 
-
-const PassHeader = () =>
+const PassHeader = () => (
   <StyledRow spaceBetween>
-    <HeaderItem flexBasis="30%">date</HeaderItem>
-    <HeaderItem flexBasis="20%">from</HeaderItem>
-    <HeaderItem flexBasis="20%">to</HeaderItem>
-    <HeaderItem flexBasis="15%">weather</HeaderItem>
+    <HeaderItem flexBasis="30%">Start</HeaderItem>
+    <HeaderItem flexBasis="20%">Max</HeaderItem>
+    <HeaderItem flexBasis="20%">End</HeaderItem>
+    <HeaderItem flexBasis="15%">Weather</HeaderItem>
     <HeaderItem>alarm</HeaderItem>
-  </StyledRow>;
-
+  </StyledRow>
+);
 
 const PassItem = ({ data }) => {
+  const dateFormatString = "ddd H:MM:ss TT";
   return (
     <StyledRow spaceBetween>
-      <View flexBasis="30%"><StyledText>{data.date}</StyledText></View>
-      <View flexBasis="20%"><StyledText>{data.from}</StyledText></View>
-      <View flexBasis="20%"><StyledText>{data.to}</StyledText></View>
-      <View flexBasis="15%">
-        {/*<StyledIcon source={weatherIcon(data.weather)} resizeMode="contain"/>*/}
+      <View flexBasis="30%">
+        <StyledText>{dateFormat(new Date(data.startUTC))}</StyledText>
       </View>
-      <StyledIcon source={assets.clockDisabled}/>
+      <View flexBasis="20%">
+        <StyledText>{dateFormat(new Date(data.maxUTC))}</StyledText>
+      </View>
+      <View flexBasis="20%">
+        <StyledText>{dateFormat(new Date(data.endUTC))}</StyledText>
+      </View>
+      <View flexBasis="15%">
+        {/* <StyledIcon source={weatherIcon(data.weather)} resizeMode="contain" /> */}
+      </View>
+      <StyledIcon source={assets.clockDisabled} />
     </StyledRow>
   );
 };
-
 
 export default PassInfo;
