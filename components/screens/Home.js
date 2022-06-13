@@ -9,10 +9,12 @@ import WeatherService from '../../services/WeatherService';
 import LocationService from '../../services/LocationService';
 import { dayTh } from '../../constants/helpers';
 import { useFocusEffect } from '@react-navigation/core';
+import * as satellite from 'satellite.js';
 
 
 const Home = (props) => {
   const [skyObject, setSkyObject] = useState(satelliteList[0]);
+  const [skyObjectLocation, setSkyObjectLocation] = useState(null);
   const [currentLatitude, setCurrentLatitude] = useState(assets.wroclawLocation.latitude);
   const [currentLongitude, setCurrentLongitude] = useState(assets.wroclawLocation.longitude);
   const [locationName, setLocationName] = useState('');
@@ -28,17 +30,20 @@ const Home = (props) => {
     };
   };
   
-  useFocusEffect(useCallback(() => {
-    getLocationData();
+  useEffect(() => {
+    setLocationData();
     
     setDate(getCurrentDate());
-    
+  }, []);
+  
+  useFocusEffect(useCallback(() => {
     if (props.route?.params) {
       setSkyObject(props.route?.params);
     }
+    
     if (skyObject.noradId) {
-      const { tle, radio, position, visual } = getAllInfoAboutSatellite(skyObject.noradId);
-      console.log(visual);
+      getSkyObjectPosition(new Date())
+        .then(res => setSkyObjectLocation(res));
     }
     
     getCurrentWeather(
@@ -48,7 +53,7 @@ const Home = (props) => {
   }, [props.route]));
   
   
-  const getLocationData = async () => {
+  const setLocationData = async () => {
     const { latitude, longitude } = await LocationService.getCurrentLocation();
     setCurrentLatitude(latitude);
     setCurrentLongitude(longitude);
@@ -72,15 +77,30 @@ const Home = (props) => {
   };
   
   const getAllInfoAboutSatellite = async (noradId) => {
-    const tle = await SkyService.getTle(noradId).data;
-    
+    const { data: { tle } } = await SkyService.getTle(noradId);
     const options = mapToOptionObject();
     
-    const radio = await SkyService.getRadioPasses(noradId, options).data;
-    const position = await SkyService.getSatellitePositions(noradId, options).data;
-    const visual = await SkyService.getVisualPasses(noradId, options).data;
+    const radio = await SkyService.getRadioPasses(noradId, options);
+    const position = await SkyService.getSatellitePositions(noradId, options);
+    const visual = await SkyService.getVisualPasses(noradId, options);
     
     return { tle, radio, position, visual };
+  };
+  
+  const getSkyObjectPosition = async (date) => {
+    const { data: { tle } } = await SkyService.getTle(skyObject.noradId);
+    
+    const satrec = satellite.twoline2satrec(
+      tle.split('\n')[0].trim(),
+      tle.split('\n')[1].trim()
+    );
+    const positionAndVelocity = satellite.propagate(satrec, date);
+    const gmst = satellite.gstime(date);
+    const position = satellite.eciToGeodetic(positionAndVelocity.position, gmst);
+    
+    const longitude = satellite.degreesLong(position.longitude);
+    const latitude = satellite.degreesLat(position.latitude);
+    return { longitude, latitude };
   };
   
   return (
@@ -96,7 +116,9 @@ const Home = (props) => {
           currentLocation={locationName}
           currentDate={date}
         />
-        <Map lat={currentLatitude} lon={currentLongitude}/>
+        <Map lat={currentLatitude}
+             lon={currentLongitude}
+             skyObject={skyObjectLocation}/>
         <PassInfo passData={passData} nextPass="00:00:00"/>
       </StyledSafeAreaView>
       

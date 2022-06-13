@@ -1,10 +1,15 @@
-import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
+import MapView, { PROVIDER_GOOGLE, Marker } from 'react-native-maps';
 import { COLORS, SIZES } from '../../constants';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 
-const Map = ({ lat, lon }) => {
+const Map = ({ lat, lon, skyObject }) => {
   const ref = useRef(null);
+  const [satelliteLocation, setSatelliteLocation] = useState(null);
+  
+  useEffect(() => {
+    setSatelliteLocation(skyObject);
+  }, [skyObject]);
   
   useEffect(() => {
     ref.current.animateCamera(
@@ -41,7 +46,16 @@ const Map = ({ lat, lon }) => {
         bottom: SIZES.xxLarge,
         left: SIZES.large
       }}
-    />
+    >
+      {satelliteLocation ? <Marker
+        key={1}
+        coordinate={{
+          latitude: satelliteLocation.latitude,
+          longitude: satelliteLocation.longitude
+        }}
+        title="ISS"
+      /> : null}
+    </MapView>
   );
 };
 
