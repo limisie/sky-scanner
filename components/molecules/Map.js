@@ -1,15 +1,15 @@
-import MapView, { PROVIDER_GOOGLE, Marker } from 'react-native-maps';
+import MapView, { PROVIDER_GOOGLE, Polyline, Marker } from 'react-native-maps';
 import { COLORS, SIZES } from '../../constants';
 import { useEffect, useRef, useState } from 'react';
 
 
-const Map = ({ lat, lon, skyObject }) => {
+const Map = ({ lat, lon, satelliteLocations }) => {
   const ref = useRef(null);
-  const [satelliteLocation, setSatelliteLocation] = useState(null);
+  const [satellitePath, setSatellitePath] = useState(null);
   
   useEffect(() => {
-    setSatelliteLocation(skyObject);
-  }, [skyObject]);
+    setSatellitePath(satelliteLocations);
+  }, [satelliteLocations]);
   
   useEffect(() => {
     ref.current.animateCamera(
@@ -47,14 +47,16 @@ const Map = ({ lat, lon, skyObject }) => {
         left: SIZES.large
       }}
     >
-      {satelliteLocation ? <Marker
-        key={1}
-        coordinate={{
-          latitude: satelliteLocation.latitude,
-          longitude: satelliteLocation.longitude
-        }}
-        title="ISS"
-      /> : null}
+      {satellitePath ?
+        <Polyline
+          coordinates={satellitePath}
+          strokeColor={COLORS.complementary}
+          strokeWidth={2}
+        /> : null}
+      {satellitePath ?
+        <Marker
+          coordinate={satellitePath[0]}
+        /> : null}
     </MapView>
   );
 };

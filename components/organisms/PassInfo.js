@@ -10,7 +10,7 @@ import { weatherIcon } from "../../constants/helpers";
 import dateFormat, { masks } from "dateformat";
 
 const PassInfo = ({ passData }) => {
-  const dateFormatBasicString = "H:MM TT";
+  const dateFormatBasicString = "H:MM:ss TT";
 
   return (
     <RoundedContainer marginTop={-SIZES.extraLarge}>

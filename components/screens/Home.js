@@ -13,7 +13,7 @@ import * as satellite from "satellite.js";
 
 const Home = (props) => {
   const [skyObject, setSkyObject] = useState(satelliteList[0]);
-  const [skyObjectLocation, setSkyObjectLocation] = useState(null);
+  const [satellitePath, setSatellitePath] = useState(null);
   const [currentLatitude, setCurrentLatitude] = useState(
     assets.wroclawLocation.latitude
   );
@@ -22,8 +22,6 @@ const Home = (props) => {
   );
   const [locationName, setLocationName] = useState("");
   const [date, setDate] = useState("");
-
-  const [apiSatteliteInfo, setApiSattleiteInfo] = useState(null);
 
   const mapToOptionObject = () => {
     return {
@@ -118,6 +116,38 @@ const Home = (props) => {
     return { longitude, latitude };
   };
 
+  const getSkyObjectPositions = async () => {
+    const {
+      data: { tle },
+    } = await SkyService.getTle(skyObject.noradId);
+
+    const satrec = satellite.twoline2satrec(
+      tle.split("\n")[0].trim(),
+      tle.split("\n")[1].trim()
+    );
+
+    const now = new Date();
+    const positions = [];
+
+    for (let i = 0; i < 86400; i += 3600) {
+      let time = new Date(now.getDate() + i);
+
+      let positionAndVelocity = satellite.propagate(satrec, time);
+      let gmst = satellite.gstime(time);
+      let position = satellite.eciToGeodetic(
+        positionAndVelocity.position,
+        gmst
+      );
+
+      let longitude = satellite.degreesLong(position.longitude);
+      let latitude = satellite.degreesLat(position.latitude);
+
+      positions.push({ longitude, latitude });
+    }
+
+    return positions;
+  };
+
   return (
     <StyledBackground>
       <StyledSafeAreaView>
@@ -134,9 +164,9 @@ const Home = (props) => {
         <Map
           lat={currentLatitude}
           lon={currentLongitude}
-          skyObject={skyObjectLocation}
+          satelliteLocations={satellitePath}
         />
-        <PassInfo passData={passData} />
+        <PassInfo passData={passData} nextPass="00:00:00" />
       </StyledSafeAreaView>
 
       <Background />
