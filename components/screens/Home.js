@@ -3,49 +3,50 @@ import { StyledBackground, StyledSafeAreaView } from '../../constants/styled';
 import { assets, COLORS } from '../../constants';
 import { HomeHeader, Map, Background, PassInfo } from '../';
 import { passData, satelliteList } from '../../constants/data';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import SkyService from '../../services/SkyService';
 import WeatherService from '../../services/WeatherService';
 import LocationService from '../../services/LocationService';
 import { dayTh } from '../../constants/helpers';
+import { useFocusEffect } from '@react-navigation/core';
+
 
 const Home = (props) => {
   const [skyObject, setSkyObject] = useState(satelliteList[0]);
-  const [currentLongitude, setCurrentLongitude] = useState(0);
-  const [currentLatitude, setCurrentLatitude] = useState(0);
+  const [currentLatitude, setCurrentLatitude] = useState(assets.wroclawLocation.latitude);
+  const [currentLongitude, setCurrentLongitude] = useState(assets.wroclawLocation.longitude);
   const [locationName, setLocationName] = useState('');
-  const [time, setTime] = useState('');
+  const [date, setDate] = useState('');
   
   const mapToOptionObject = () => {
     return {
-      observerLat: currentLatitude || 51.123523493468745, // Dirty for Breslau
-      observerLng: currentLongitude || 17.053184453909658,
+      observerLat: currentLatitude,
+      observerLng: currentLongitude,
       days: 0,
       minElevation: 40,
       observerAlt: 0,
     };
   };
   
-  useEffect(() => {
+  useFocusEffect(useCallback(() => {
     getLocationData();
     
-    setTime(getCurrentTime());
-    // setInterval(() => {
-    //   setTime(getCurrentTime());
-    // }, 60000);
+    setDate(getCurrentDate());
     
     if (props.route?.params) {
       setSkyObject(props.route?.params);
     }
     if (skyObject.noradId) {
-      getAllInfoAboutSatellite(skyObject.noradId);
+      const { tle, radio, position, visual } = getAllInfoAboutSatellite(skyObject.noradId);
+      console.log(visual);
     }
     
-    // getCurrentWeather(
-    //   mapToOptionObject().observerLat,
-    //   mapToOptionObject().observerLng
-    // );
-  }, []);
+    getCurrentWeather(
+      mapToOptionObject().observerLat,
+      mapToOptionObject().observerLng
+    );
+  }, [props.route]));
+  
   
   const getLocationData = async () => {
     const { latitude, longitude } = await LocationService.getCurrentLocation();
@@ -55,20 +56,18 @@ const Home = (props) => {
     setLocationName(name);
   };
   
-  const getCurrentTime = () => {
+  const getCurrentDate = () => {
     const today = new Date();
     const month = assets.monthNames[today.getMonth()];
     const day = today.getDate();
-    const hour = (today.getHours() < 10 ? '0' : '') + today.getHours();
-    const minute = (today.getMinutes() < 10 ? '0' : '') + today.getMinutes();
     
-    return `${month} ${day}${dayTh(day)}, ${hour}:${minute}`;
+    return `${month} ${day}${dayTh(day)}`;
   };
+  
   
   const getCurrentWeather = async (observerLat, observerLng) => {
     const location = [observerLat, observerLng];
-    const weather = await WeatherService.getWeather(location);
-    // console.log(weather);
+    // const weather = await WeatherService.getWeather(location);
     return weather;
   };
   
@@ -95,7 +94,7 @@ const Home = (props) => {
         <HomeHeader
           objectName={skyObject.name}
           currentLocation={locationName}
-          currentDate={time}
+          currentDate={date}
         />
         <Map lat={currentLatitude} lon={currentLongitude}/>
         <PassInfo passData={passData} nextPass="00:00:00"/>

@@ -17,7 +17,7 @@ const Map = ({ lat, lon }) => {
         zoom: 0
       },
       {
-        duration: 1
+        duration: 1500
       });
   }, [lat, lon]);
   
@@ -40,12 +40,6 @@ const Map = ({ lat, lon }) => {
         right: SIZES.base,
         bottom: SIZES.xxLarge,
         left: SIZES.large
-      }}
-      initialRegion={{
-        latitude: lat,
-        longitude: lon,
-        latitudeDelta: 300,
-        longitudeDelta: 300,
       }}
     />
   );

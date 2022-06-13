@@ -4,30 +4,30 @@ import { TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
 
-const HomeHeader = ({objectName, currentLocation, currentDate}) => {
-    const navigation = useNavigation();
+const HomeHeader = ({ objectName, currentLocation, currentDate }) => {
+  const navigation = useNavigation();
+  
+  return (
+    <BasicContainer marginVertical={SIZES.base} maxHeight={70}>
+      
+      <StyledRow spaceBetween>
+        <StyledText isBold size={SIZES.extraLarge} color={COLORS.white}>{objectName}</StyledText>
+        <TouchableOpacity onPress={() => navigation.navigate('Search')}>
+          <StyledIcon source={assets.search} resizeMode="contain"/>
+        </TouchableOpacity>
+      </StyledRow>
+      
+      <StyledRow spaceBetween>
+        <StyledRow>
+          <StyledIcon source={assets.pin} width={20} height={20} resizeMode="contain"
+                      mariginRight={SIZES.base}/>
+          <StyledText color={COLORS.white}>{currentLocation}</StyledText>
+        </StyledRow>
+        <StyledText isBold color={COLORS.offWhite} size={SIZES.small}>{currentDate}</StyledText>
+      </StyledRow>
     
-    return (
-        <BasicContainer marginVertical={SIZES.base} maxHeight={70}>
-            
-            <StyledRow spaceBetween>
-                <StyledText isBold size={SIZES.extraLarge} color={COLORS.white}>{objectName}</StyledText>
-                <TouchableOpacity onPress={() => navigation.navigate('Search')}>
-                    <StyledIcon source={assets.search} resizeMode="contain"/>
-                </TouchableOpacity>
-            </StyledRow>
-            
-            <StyledRow spaceBetween>
-                <StyledRow>
-                    <StyledIcon source={assets.pin} width={20} height={20} resizeMode="contain"
-                                mariginRight={SIZES.base}/>
-                    <StyledText color={COLORS.white}>{currentLocation}</StyledText>
-                </StyledRow>
-                <StyledText color={COLORS.white}>{currentDate}</StyledText>
-            </StyledRow>
-        
-        </BasicContainer>
-    );
+    </BasicContainer>
+  );
 };
 
 export default HomeHeader;

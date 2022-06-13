@@ -6,7 +6,7 @@ import { weatherIcon } from '../../constants/helpers';
 
 const PassInfo = ({ passData, nextPass }) => {
   return (
-    <RoundedContainer margin-top={-SIZES.extraLarge}>
+    <RoundedContainer marginTop={-SIZES.extraLarge}>
       <StyledRow spaceBetween>
         <StyledText isBold>Next pass</StyledText>
         <StyledText>{nextPass}</StyledText>

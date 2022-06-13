@@ -21,7 +21,7 @@ const getCurrentLocation = async () => {
 const getLocationName = async (latitude, longitude) => {
   const { data: { results } } = await getLocationDetails(latitude, longitude);
   const { address_components } = results[0];
-  const { long_name: city } = address_components[3];
+  const { long_name: city } = address_components[4];
   const { short_name: countryCode } = address_components[6];
   return `${city}, ${countryCode}`;
 };

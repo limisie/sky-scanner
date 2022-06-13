@@ -14,6 +14,11 @@ const monthNames = ['January', 'February', 'March', 'April', 'May', 'June',
   'July', 'August', 'September', 'October', 'November', 'December'
 ];
 
+const wroclawLocation = {
+  latitude: 51.123523493468745,
+  longitude: 17.053184453909658
+};
+
 export default {
   pin,
   search,
@@ -27,5 +32,6 @@ export default {
   map,
   satellite,
   
-  monthNames
+  monthNames,
+  wroclawLocation,
 };
